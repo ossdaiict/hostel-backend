@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 
 const User = require("../../models/user");
 
-const sendConfirmationMail = require("../../utils/sendConfirmationMail");
+const { sendConfirmationMail } = require("../../utils/mailSender");
 
 const saltRounds = 10;
 

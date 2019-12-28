@@ -38,4 +38,23 @@ const sendConfirmationMail = sID => {
   });
 };
 
-module.exports = sendConfirmationMail;
+const sendCourierMail = sID => {
+  const mailOptions = {
+    from: '"Hostel DAIICT No Reply" <noreply.hostel.daiict@gmail.com>',
+    to: `${String(sID)}@daiict.ac.in`,
+    subject: "Hostel Student Account Confirmation",
+    html:
+      `Hello, <strong>${sid}</strong> <br><br>` +
+      `<p>Please collect the courier form the office.</p><br>` +
+      "Regards,<br>" +
+      "Hostel Management Committee."
+  };
+
+  // Send mail with defined transport object
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) console.log(err);
+    else console.log("Message sent: %s", info.messageId);
+  });
+};
+
+module.exports = { sendConfirmationMail, sendCourierMail };

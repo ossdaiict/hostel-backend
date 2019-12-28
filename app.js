@@ -9,7 +9,7 @@ const app = express();
 
 const port = 5000 || process.env.PORT;
 
-const auth = require("./routers/auth/index");
+const auth = require("./routers/auth");
 
 app.use(morgan("tiny")); // logging request
 app.use(helmet()); // Sanitization of requests
