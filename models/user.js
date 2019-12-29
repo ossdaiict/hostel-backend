@@ -4,10 +4,10 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
-    sID: { type: String, required: true, match: /\d{9}/, unique: true },
+    sID: { type: Number, required: true, match: /\d{9}/, unique: true },
     name: { type: String, required: true },
     wing: { type: String, required: true },
-    room: { type: Number, required: true },
+    room: { type: String, required: true },
     password: { type: String, required: true },
     isUserVerified: { type: Boolean, default: false },
     isHMC: { type: Boolean, default: false },

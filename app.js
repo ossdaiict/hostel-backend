@@ -10,6 +10,8 @@ const app = express();
 const port = 5000 || process.env.PORT;
 
 const auth = require("./routers/auth");
+const courier = require("./routers/courier");
+const worker = require("./worker/schedule");
 
 app.use(morgan("tiny")); // logging request
 app.use(helmet()); // Sanitization of requests
@@ -17,6 +19,7 @@ app.use(express.json()); // Parsing requests as in JSON format
 app.use(cors()); //Use CORS
 
 app.use("/auth", auth);
+app.use("/courier", courier);
 
 // Connect to database
 mongoose.connect(process.env.DATABASE_STRING);
@@ -26,6 +29,9 @@ conn.on("error", console.error.bind(console, "MongoDB Error: "));
 conn.on("connected", () => {
   console.log("Connected To Database...");
 });
+
+//worker file
+worker();
 
 // Error handling
 app.use((err, req, res) => {

@@ -42,9 +42,9 @@ const sendCourierMail = sID => {
   const mailOptions = {
     from: '"Hostel DAIICT No Reply" <noreply.hostel.daiict@gmail.com>',
     to: `${String(sID)}@daiict.ac.in`,
-    subject: "Hostel Student Account Confirmation",
+    subject: "Courier Collection",
     html:
-      `Hello, <strong>${sid}</strong> <br><br>` +
+      `Hello, <strong>${sID}</strong> <br><br>` +
       `<p>Please collect the courier form the office.</p><br>` +
       "Regards,<br>" +
       "Hostel Management Committee."
