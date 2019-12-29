@@ -9,6 +9,7 @@ const { sendCourierMail } = require("../utils/mailSender");
 // function for sending the mails
 function worker() {
   let a = scheduler.scheduleJob("0 30 11 * * *", function() {
+    let date;
     MailingDetails.find()
       .select("-__v -_id")
       .then(details => {
@@ -17,20 +18,19 @@ function worker() {
             return mail.mailCount < 4 ? mail : null;
           })
           .map(mail => {
-            MailingDetails.findOneAndUpdate(
-              { cID: mail.cID, sID: mail.sID },
-              { $inc: { mailCount: 1 } }
-            )
-              .select("-__v -_id")
-              .then(mail => {
-                let date = moment(mail.initialDate, "DD-MM-YYYY")
-                  .add((mail.mailCount + 1) * 2, "d")
-                  .format("DD-MM-YYYY");
-                if (date === moment(new Date()).format("DD-MM-YYYY")) {
-                  sendCourierMail(mail.sID);
-                }
-              })
-              .catch(err => console.log(err));
+            date = moment(mail.initialDate, "DD-MM-YYYY")
+              .add((mail.mailCount + 1) * 2, "d")
+              .format("DD-MM-YYYY");
+            if (date === moment(new Date()).format("DD-MM-YYYY")) {
+              sendCourierMail(mail.sID);
+              MailingDetails.findOneAndUpdate(
+                { cID: mail.cID, sID: mail.sID },
+                { $inc: { mailCount: 1 } }
+              )
+                .select("-__v -_id")
+                .then(mail => {})
+                .catch(err => console.log(err));
+            }
           });
       });
   });
