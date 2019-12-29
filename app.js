@@ -13,7 +13,7 @@ const auth = require("./routers/auth");
 const courier = require("./routers/courier");
 const worker = require("./worker/schedule");
 
-app.use(morgan("tiny")); // logging request
+app.use(morgan("dev")); // logging request
 app.use(helmet()); // Sanitization of requests
 app.use(express.json()); // Parsing requests as in JSON format
 app.use(cors()); //Use CORS
@@ -22,7 +22,10 @@ app.use("/auth", auth);
 app.use("/courier", courier);
 
 // Connect to database
-mongoose.connect(process.env.DATABASE_STRING);
+mongoose.connect(process.env.DATABASE_STRING, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 mongoose.set("debug", true);
 const conn = mongoose.connection;
 conn.on("error", console.error.bind(console, "MongoDB Error: "));

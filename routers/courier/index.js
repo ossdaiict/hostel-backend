@@ -3,7 +3,7 @@ const express = require("express");
 const Courier = require("../../models/courier");
 const MailingDetails = require("../../models/mailingDetail");
 const { sendCourierMail } = require("../../utils/mailSender");
-const checkAuth = require("../../middleware/checkAuth");
+const checkSupervisor = require("../../middleware/checkSupervisor");
 
 const getCouriers = (req, res) => {
   Courier.find()
@@ -42,7 +42,6 @@ const removeCourier = (req, res) => {
   const { cID, sID } = req.body;
   MailingDetails.deleteOne({ cID, sID })
     .then(info => {
-      console.log("Remove courier");
       Courier.findOneAndUpdate(
         { cID, sID },
         { $set: { isCourierCollected: true } }
@@ -66,7 +65,7 @@ const removeCourier = (req, res) => {
 const router = express.Router();
 
 router.get("/", getCouriers);
-router.post("/add", checkAuth, addCourier);
-router.post("/delete", checkAuth, removeCourier);
+router.post("/add", checkSupervisor, addCourier);
+router.post("/delete", checkSupervisor, removeCourier);
 
 module.exports = router;

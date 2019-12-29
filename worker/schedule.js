@@ -8,7 +8,7 @@ const { sendCourierMail } = require("../utils/mailSender");
 
 // function for sending the mails
 function worker() {
-  let a = scheduler.scheduleJob("*/5 * * * * *", function() {
+  let a = scheduler.scheduleJob("0 30 11 * * *", function() {
     MailingDetails.find()
       .select("-__v -_id")
       .then(details => {

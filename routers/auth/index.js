@@ -27,7 +27,6 @@ const signIn = (req, res) => {
             return res.status(500).json({ message: "Auth failed!.." });
           }
           if (result) {
-            console.log(user, "hello");
             const { sID, isHMC, isSupervisor } = user;
             const token = jwt.sign(
               {
@@ -50,7 +49,6 @@ const signIn = (req, res) => {
 
 const userVerification = (req, res) => {
   const user = jwt.verify(req.params.token, process.env.SECRET_KEY);
-  console.log(user);
   const { sID } = user;
   User.update({ sID }, { isUserVerified: true }, err => {
     if (err) {
