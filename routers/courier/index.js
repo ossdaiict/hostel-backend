@@ -6,7 +6,18 @@ const { sendCourierMail } = require("../../utils/mailSender");
 const checkSupervisor = require("../../middleware/checkSupervisor");
 
 const getCouriers = (req, res) => {
-  Courier.find()
+  Courier.find({ isCourierCollected: false })
+    .select("-__v -_id")
+    .then(couriers => {
+      res.status(201).json(couriers);
+    })
+    .catch(err =>
+      res.status(500).json({ message: "Failed to query database!.." })
+    );
+};
+
+const getPrevCouriers = (req, res) => {
+  Courier.find({ isCourierCollected: true })
     .select("-__v -_id")
     .then(couriers => {
       res.status(201).json(couriers);
@@ -44,16 +55,16 @@ const removeCourier = (req, res) => {
     .then(info => {
       Courier.findOneAndUpdate(
         { cID, sID },
-        { $set: { isCourierCollected: true } }
+        { $set: { isCourierCollected: true } },
+        { new: true }
       ).then(courier => {
         if (courier) {
-          return res
-            .status(201)
-            .json({ message: "Removed Courier Successfully." });
+          return res.status(201).json(courier);
+          // .json({ message: "Removed Courier Successfully." });
         } else {
           return res
             .status(500)
-            .json({ message: "Failed to remove courier!.." });
+            .json({ message: "Failed to remove node courier!.." });
         }
       });
     })
@@ -65,6 +76,7 @@ const removeCourier = (req, res) => {
 const router = express.Router();
 
 router.get("/", getCouriers);
+router.get("/previous", getPrevCouriers);
 router.post("/add", checkSupervisor, addCourier);
 router.post("/delete", checkSupervisor, removeCourier);
 

@@ -37,9 +37,8 @@ conn.on("connected", () => {
 worker();
 
 // Error handling
-app.use((err, req, res) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Server Error, Something Broke" });
+app.use((req, res) => {
+  return res.status(500).json({ message: "Server Error, Something Broke" });
 });
 
 // Start Server

@@ -27,7 +27,7 @@ const signIn = (req, res) => {
             return res.status(500).json({ message: "Auth failed!.." });
           }
           if (result) {
-            const { sID, isHMC, isSupervisor } = user;
+            const { sID, isHMC, isSupervisor, wing, name, room } = user;
             const token = jwt.sign(
               {
                 sID,
@@ -39,7 +39,13 @@ const signIn = (req, res) => {
             );
             return res.status(201).json({
               message: "Successful Authentication.",
-              token
+              token,
+              user: {
+                sID,
+                name,
+                wing,
+                room
+              }
             });
           } else res.status(500).json({ message: "Incorrect Password!.." });
         });
@@ -99,8 +105,9 @@ const signUp = (req, res) => {
 };
 
 const router = express.Router();
+
+router.get("/:token", userVerification);
 router.post("/signin", signIn);
 router.post("/signup", signUp);
-router.get("/:token", userVerification);
 
 module.exports = router;
