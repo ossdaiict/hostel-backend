@@ -59,8 +59,9 @@ const removeCourier = (req, res) => {
         { new: true }
       ).then(courier => {
         if (courier) {
-          return res.status(201).json(courier);
-          // .json({ message: "Removed Courier Successfully." });
+          return res
+            .status(201)
+            .json({ courier, message: "Removed Courier Successfully." });
         } else {
           return res
             .status(500)
