@@ -57,4 +57,46 @@ const sendCourierMail = sID => {
   });
 };
 
-module.exports = { sendConfirmationMail, sendCourierMail };
+const sendComplaintMail = complaint => {
+  const token = jwt.sign(
+    { sID: complaint.sID, _id: complaint._id },
+    process.env.SECRET_KEY,
+    { expiresIn: "5d" }
+  );
+
+  const url = `http://localhost:5000/complaint/reopen/${token}`;
+
+  const mailOptions = {
+    from: '"Hostel DAIICT No Reply" <noreply.hostel.daiict@gmail.com>',
+    to: `${String(complaint.sID)}@daiict.ac.in`,
+    subject: "Regarding Complaint",
+    html:
+      `Hello, <strong>${complaint.name}</strong> <br><br>` +
+      `ID:${complaint.sID}<br>` +
+      `Room No.:${complaint.wing}-${complaint.room}<br>` +
+      `Complaint type:${complaint.type}<br>` +
+      `Complaint:${complaint.complaint}<br>` +
+      `Date:${complaint.initialDate}<br><br>` +
+      `Would you like to re-open it,<br>` +
+      `<button style="margin:1rem;
+      padding:1.5rem;
+      background:transparent;
+      color:blue;
+      border:5px solid #ff9900;
+      outline:none;
+      font-size:2rem;
+      font-weight:bold">
+        <a href=${url}>Re-open it.</a>
+      </button><br><br>` +
+      "Regards,<br>" +
+      "Hostel Management Committee."
+  };
+
+  // Send mail with defined transport object
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) console.log(err);
+    else console.log("Message sent: %s", info.messageId);
+  });
+};
+
+module.exports = { sendConfirmationMail, sendCourierMail, sendComplaintMail };
