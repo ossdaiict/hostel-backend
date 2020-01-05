@@ -8,8 +8,10 @@ const { sendComplaintMail } = require("../../utils/mailSender");
 
 const getComplaint = (req, res) => {
   const { query } = req.body;
+  console.log(query);
   Complaint.find(query)
     .select("-__v")
+    .sort({ initialDate: -1, reOpenDate: -1 })
     .then(result => {
       res.status(201).json(result);
     })

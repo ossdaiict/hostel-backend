@@ -44,7 +44,9 @@ const signIn = (req, res) => {
                 sID,
                 name,
                 wing,
-                room
+                room,
+                isHMC,
+                isSupervisor
               }
             });
           } else res.status(500).json({ message: "Incorrect Password!.." });
