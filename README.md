@@ -8,6 +8,15 @@ Basically it manage the mailing and complaint system.
 * [MongoDB](https://www.mongodb.com/)
 * [Nodemailer](https://nodemailer.com/about/) for mailing 
 
+
+## Basic functionality
+
+* Role base authentication system.
+* Sending the mail on every second day for Snail Mail.
+* Auto close complaints within 24 to 48 hours.
+* Use [Redux](https://redux.js.org/) for state managment.
+
+
 Create .env file at root folder and provide environment variables
 ```bash
 # Gmail Email and Password
@@ -38,8 +47,3 @@ yarn start
 # Server runs on http://localhost:5000 
 ```
 
-
-* Role base authentication system.
-* Sending the mail on every second day for Snail Mail.
-* Auto close complaints within 24 to 48 hours.
-* Use [Redux](https://redux.js.org/) for state managment.
