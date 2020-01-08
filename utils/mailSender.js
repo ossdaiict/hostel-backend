@@ -99,4 +99,31 @@ const sendComplaintMail = complaint => {
   });
 };
 
-module.exports = { sendConfirmationMail, sendCourierMail, sendComplaintMail };
+const sendPasswordResetMail = sID => {
+  const token = jwt.sign({ sID }, process.env.SECRET_KEY, { expiresIn: "5d" }); // Generate Token
+  const url = `http://localhost:3000/reset-password/${token}`;
+
+  const mailOptions = {
+    from: '"Hostel DAIICT No Reply" <noreply.hostel.daiict@gmail.com>',
+    to: `${String(sID)}@daiict.ac.in`,
+    subject: "Reset Password",
+    html:
+      `Hello, <strong>${sID}</strong> <br><br>` +
+      `<p>Please click <a href="${url}">here</a> to change the password.</p><br>` +
+      "Regards,<br>" +
+      "Hostel Management Committee."
+  };
+
+  // Send mail with defined transport object
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) console.log(err);
+    else console.log("Message sent: %s", info.messageId);
+  });
+};
+
+module.exports = {
+  sendConfirmationMail,
+  sendCourierMail,
+  sendComplaintMail,
+  sendPasswordResetMail
+};

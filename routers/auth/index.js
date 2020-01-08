@@ -4,7 +4,10 @@ const bcrypt = require("bcrypt");
 
 const User = require("../../models/user");
 
-const { sendConfirmationMail } = require("../../utils/mailSender");
+const {
+  sendConfirmationMail,
+  sendPasswordResetMail
+} = require("../../utils/mailSender");
 
 const saltRounds = 10;
 
@@ -106,10 +109,37 @@ const signUp = (req, res) => {
   });
 };
 
+const sendPasswordResetLink = (req, res) => {
+  const { sID } = req.body;
+  sendPasswordResetMail(sID);
+  res.status(201).json({ message: "Plaese check your email!." });
+};
+
+const resetPassword = (req, res) => {
+  const { password } = req.body;
+  const user = jwt.verify(req.params.token, process.env.SECRET_KEY);
+  const { sID } = user;
+  bcrypt.genSalt(saltRounds, function(err, salt) {
+    bcrypt.hash(password, salt, (err, hash) => {
+      User.findOneAndUpdate({ sID }, { password: hash })
+        .then(user => {
+          res
+            .status(201)
+            .json({ message: "Password is changed Successfully." });
+        })
+        .catch(err => {
+          res.status(500).json({ message: "Password is not changed!.." });
+        });
+    });
+  });
+};
+
 const router = express.Router();
 
 router.get("/:token", userVerification);
 router.post("/signin", signIn);
 router.post("/signup", signUp);
+router.post("/reset-password", sendPasswordResetLink);
+router.post("/reset-password/:token", resetPassword);
 
 module.exports = router;

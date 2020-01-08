@@ -8,6 +8,7 @@ const checkSupervisor = require("../../middleware/checkSupervisor");
 const getCouriers = (req, res) => {
   Courier.find({ isCourierCollected: false })
     .select("-__v -_id")
+    .sort({ cdate: -1 })
     .then(couriers => {
       res.status(201).json(couriers);
     })
