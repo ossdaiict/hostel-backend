@@ -14,7 +14,7 @@ Basically it manage the mailing and complaint system.
 - Role base authentication system.
 - Sending the mail on every second day for Snail Mail.
 - Auto close complaints within 24 to 48 hours.
-- Use [Redux](https://redux.js.org/) for state managment.
+
 
 Create `.env` file at root folder and provide environment variables
 
