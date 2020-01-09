@@ -4,46 +4,43 @@ Hostel Backend is created with the help of [Express.js](http://expressjs.com/) a
 Basically it manage the mailing and complaint system.
 
 ## Requirements
-* [Node.js](https://nodejs.org/en/)
-* [MongoDB](https://www.mongodb.com/)
-* [Nodemailer](https://nodemailer.com/about/) for mailing 
 
+- [Node.js](https://nodejs.org/en/)
+- [MongoDB](https://www.mongodb.com/)
+- [Nodemailer](https://nodemailer.com/about/) for mailing
 
 ## Basic functionality
 
-* Role base authentication system.
-* Sending the mail on every second day for Snail Mail.
-* Auto close complaints within 24 to 48 hours.
-* Use [Redux](https://redux.js.org/) for state managment.
+- Role base authentication system.
+- Sending the mail on every second day for Snail Mail.
+- Auto close complaints within 24 to 48 hours.
+- Use [Redux](https://redux.js.org/) for state managment.
 
+Create `.env` file at root folder and provide environment variables
 
-Create .env file at root folder and provide environment variables
 ```bash
 # Gmail Email and Password
-EMAIL
-PASSWORD
-
+EMAIL=
+PASSWORD=
 # JWT Secret key
-SECRET_KEY
-
+SECRET_KEY=
 # Website Login page
-LOGIN_PAGE
-
+LOGIN_PAGE=
 # Mongodb database string
-DATABASE_STRING
+DATABASE_STRING=
 ```
 
 ## Instruction
-``` bash
+
+```bash
 # Install dependencies for server
-yarn 
+yarn
 
 # Run the server on nodemon
 yarn  dev
 
 # Run the Express server only
-yarn start 
+yarn start
 
-# Server runs on http://localhost:5000 
+# Server runs on http://localhost:5000
 ```
-
