@@ -4,12 +4,12 @@ const jwt = require("jsonwebtoken");
 
 const Complaint = require("../../models/complaint");
 const checkAuth = require("../../middleware/checkAuth");
-const { sendComplaintMail } = require("../../utils/mailSender");
+const { sendComplaintMail, sendRemarkMail } = require("../../utils/mailSender");
 
 const getComplaint = (req, res) => {
   const { query } = req.body;
   console.log(query);
-  Complaint.find(query)
+  Complaint.find({ isValid: true })
     .select("-__v")
     .sort({ initialDate: -1, reOpenDate: -1 })
     .then(result => {
@@ -21,7 +21,7 @@ const getComplaint = (req, res) => {
 };
 
 const postComplaint = (req, res) => {
-  const { sID, name, room, wing, type, complaint } = req.body;
+  const { sID, name, room, wing, type, complaint, createdByHMC } = req.body;
   Complaint.create(
     {
       sID,
@@ -30,11 +30,11 @@ const postComplaint = (req, res) => {
       wing,
       type,
       complaint,
+      createdByHMC,
       initialDate: moment(new Date()).format("DD-MM-YYYY")
     },
     err => {
       if (err) {
-        console.log(err);
         return res
           .status(500)
           .json({ message: "Failed to register complaint!.." });
@@ -94,11 +94,35 @@ const reOpenComplaint = (req, res) => {
   );
 };
 
+const setRemarks = (req, res) => {
+  const { remark, workerID, sID, complaintID } = req.body;
+  Complaint.findByIdAndUpdate(
+    { sID, _id: complaintID },
+    {
+      $set: {
+        remark,
+        remarkDate: moment(new Date()).format("DD-MM-YYYY,HH:mm:ss"),
+        workerID
+      }
+    },
+    { new: true }
+  )
+    .then(result => {
+      sendRemarkMail(result);
+      res.status(200).json({ message: "Send Remark mail!..." });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ message: "Failed to resolve complaint!..." });
+    });
+};
+
 const router = express.Router();
 
 router.post("/", getComplaint);
 router.post("/add", checkAuth, postComplaint);
 router.post("/resolve", checkAuth, resolveComplaint);
+router.post("/remark", checkAuth, setRemarks);
 router.get("/reopen/:token", reOpenComplaint);
 
 module.exports = router;

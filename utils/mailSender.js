@@ -38,25 +38,6 @@ const sendConfirmationMail = sID => {
   });
 };
 
-const sendCourierMail = sID => {
-  const mailOptions = {
-    from: '"Hostel DAIICT No Reply" <noreply.hostel.daiict@gmail.com>',
-    to: `${String(sID)}@daiict.ac.in`,
-    subject: "Courier Collection",
-    html:
-      `Hello, <strong>${sID}</strong> <br><br>` +
-      `<p>Please collect the courier form the office.</p><br>` +
-      "Regards,<br>" +
-      "Hostel Management Committee."
-  };
-
-  // Send mail with defined transport object
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) console.log(err);
-    else console.log("Message sent: %s", info.messageId);
-  });
-};
-
 const sendComplaintMail = complaint => {
   const token = jwt.sign(
     { sID: complaint.sID, _id: complaint._id },
@@ -99,6 +80,32 @@ const sendComplaintMail = complaint => {
   });
 };
 
+const sendRemarkMail = complaint => {
+  const mailOptions = {
+    from: '"Hostel DAIICT No Reply" <noreply.hostel.daiict@gmail.com>',
+    to: `${String(complaint.sID)}@daiict.ac.in`,
+    subject: "Regarding Complaint(Remark)",
+    html:
+      `Hello, <strong>${complaint.name}</strong> <br><br>` +
+      `ID:${complaint.sID}<br>` +
+      `Room No.:${complaint.wing}-${complaint.room}<br>` +
+      `Complaint type:${complaint.type}<br>` +
+      `Complaint:${complaint.complaint}<br>` +
+      `Date:${complaint.initialDate}<br><br>` +
+      `<b>Remark:${complaint.remark}</b><br>` +
+      `<b>Timing:${complaint.remarkDate}<b><br><br>` +
+      `<b>Please Next time be on your room.<b> Your complaint is still open.<br><br>` +
+      "Regards,<br>" +
+      "Hostel Management Committee."
+  };
+
+  // Send mail with defined transport object
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) console.log(err);
+    else console.log("Message sent: %s", info.messageId);
+  });
+};
+
 const sendPasswordResetMail = sID => {
   const token = jwt.sign({ sID }, process.env.SECRET_KEY, { expiresIn: "5d" }); // Generate Token
   const url = `http://localhost:3000/reset-password/${token}`;
@@ -123,7 +130,7 @@ const sendPasswordResetMail = sID => {
 
 module.exports = {
   sendConfirmationMail,
-  sendCourierMail,
   sendComplaintMail,
-  sendPasswordResetMail
+  sendPasswordResetMail,
+  sendRemarkMail
 };

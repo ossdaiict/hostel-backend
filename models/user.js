@@ -9,8 +9,7 @@ const userSchema = new Schema(
     wing: { type: String, required: true },
     room: { type: String, required: true },
     password: { type: String, required: true },
-    isUserVerified: { type: Boolean, default: false },
-    isHMC: { type: Boolean, default: false },
+    isHMCVerified: { type: Boolean, default: false },
     isSupervisor: { type: Boolean, default: false }
   },
   { collection: "user" }

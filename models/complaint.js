@@ -14,7 +14,11 @@ const userSchema = new Schema(
     isResolve: { type: Boolean, required: true, default: false },
     complaint: { type: String, required: true },
     isReOpen: { type: Boolean, required: true, default: false },
-    reOpenDate: { type: String }
+    reOpenDate: { type: String },
+    createdByHMC: { type: Number, required: true },
+    remark: { type: String },
+    remarkDate: { type: String },
+    workerID: { type: Number }
   },
   { collection: "complaint" }
 );

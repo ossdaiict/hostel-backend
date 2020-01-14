@@ -20,7 +20,7 @@ const signIn = (req, res) => {
         return res.status(500).json({ message: "Database query Failed!.." });
       } else if (user === null)
         return res.status(404).json({ message: "User does not exist!.." });
-      else if (user.isUserVerified === false)
+      else if (user.isHMCVerified === false)
         return res
           .status(500)
           .json({ message: "Email Confirmation Pending...." });
@@ -30,11 +30,10 @@ const signIn = (req, res) => {
             return res.status(500).json({ message: "Auth failed!.." });
           }
           if (result) {
-            const { sID, isHMC, isSupervisor, wing, name, room } = user;
+            const { sID, isSupervisor, wing, name, room } = user;
             const token = jwt.sign(
               {
                 sID,
-                isHMC,
                 isSupervisor
               },
               process.env.SECRET_KEY,
@@ -48,7 +47,6 @@ const signIn = (req, res) => {
                 name,
                 wing,
                 room,
-                isHMC,
                 isSupervisor
               }
             });
@@ -58,10 +56,10 @@ const signIn = (req, res) => {
     });
 };
 
-const userVerification = (req, res) => {
+const HMCVerification = (req, res) => {
   const user = jwt.verify(req.params.token, process.env.SECRET_KEY);
   const { sID } = user;
-  User.update({ sID }, { isUserVerified: true }, err => {
+  User.update({ sID }, { isHMCVerified: true }, err => {
     if (err) {
       console.log(err);
       return res
@@ -111,8 +109,18 @@ const signUp = (req, res) => {
 
 const sendPasswordResetLink = (req, res) => {
   const { sID } = req.body;
-  sendPasswordResetMail(sID);
-  res.status(201).json({ message: "Plaese check your email!." });
+  User.findOne({ sID })
+    .then(data => {
+      if (data) {
+        sendPasswordResetMail(sID);
+        return res.status(201).json({ message: "Plaese check your email!." });
+      } else {
+        throw new Error();
+      }
+    })
+    .catch(err => {
+      return res.status(500).json({ message: "User is not exist!..." });
+    });
 };
 
 const resetPassword = (req, res) => {
@@ -136,7 +144,7 @@ const resetPassword = (req, res) => {
 
 const router = express.Router();
 
-router.get("/:token", userVerification);
+router.get("/:token", HMCVerification);
 router.post("/signin", signIn);
 router.post("/signup", signUp);
 router.post("/reset-password", sendPasswordResetLink);
