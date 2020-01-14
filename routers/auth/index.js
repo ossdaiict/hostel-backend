@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const User = require("../../models/user");
+const checkSupervisor = require("../../middleware/checkSupervisor");
 
 const {
   sendConfirmationMail,
@@ -146,7 +147,7 @@ const router = express.Router();
 
 router.get("/:token", HMCVerification);
 router.post("/signin", signIn);
-router.post("/signup", signUp);
+router.post("/signup", checkSupervisor, signUp);
 router.post("/reset-password", sendPasswordResetLink);
 router.post("/reset-password/:token", resetPassword);
 

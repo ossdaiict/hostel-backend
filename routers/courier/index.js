@@ -27,9 +27,9 @@ const addCourier = (req, res) => {
 };
 
 const removeCourier = (req, res) => {
-  const { cID } = req.body;
+  const { courierID } = req.body;
   Courier.findOneAndUpdate(
-    { _id: cID },
+    { _id: courierID },
     { $set: { isCourierCollected: true } },
     { new: true }
   ).then(courier => {
