@@ -10,7 +10,8 @@ const userSchema = new Schema(
     room: { type: String, required: true },
     password: { type: String, required: true },
     isHMCVerified: { type: Boolean, default: false },
-    isSupervisor: { type: Boolean, default: false }
+    isSupervisor: { type: Boolean, default: false },
+    isHMCConvener: { type: Boolean, default: false }
   },
   { collection: "user" }
 );

@@ -72,6 +72,11 @@ const HMCVerification = (req, res) => {
 
 const signUp = (req, res) => {
   const { sID, password, fname, lname, wing, room } = req.body;
+  let { isSupervisor } = req.body;
+  if (!isSupervisor) {
+    isSupervisor = false;
+  }
+  // console.log(isSupervisor);
   User.findOne({ sID }).exec((error, user) => {
     if (error) {
       console.log(error);
@@ -85,7 +90,8 @@ const signUp = (req, res) => {
               room,
               wing: wing.toUpperCase(),
               name: fname + " " + lname,
-              password: hash
+              password: hash,
+              isSupervisor
             },
             error => {
               if (error) {

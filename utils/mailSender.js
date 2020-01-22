@@ -18,7 +18,7 @@ var transporter = nodemailer.createTransport({
 
 const sendConfirmationMail = sID => {
   const token = jwt.sign({ sID }, process.env.SECRET_KEY, { expiresIn: "5d" }); // Generate Token
-  const url = `http://localhost:5000/auth/${token}`;
+  const url = `${process.env.URL}/auth/${token}`;
 
   const mailOptions = {
     from: '"Hostel DAIICT No Reply" <noreply.hostel.daiict@gmail.com>',
@@ -45,7 +45,7 @@ const sendComplaintMail = complaint => {
     { expiresIn: "5d" }
   );
 
-  const url = `http://localhost:5000/complaint/reopen/${token}`;
+  const url = `${process.env.URL}/complaint/reopen/${token}`;
 
   const mailOptions = {
     from: '"Hostel DAIICT No Reply" <noreply.hostel.daiict@gmail.com>',

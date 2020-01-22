@@ -8,8 +8,8 @@ const { sendComplaintMail, sendRemarkMail } = require("../../utils/mailSender");
 
 const getComplaint = (req, res) => {
   const { query } = req.body;
-  console.log(query);
-  Complaint.find({ isValid: true })
+  // console.log(query, "Hello");
+  Complaint.find(query)
     .select("-__v")
     .sort({ initialDate: -1, reOpenDate: -1 })
     .then(result => {

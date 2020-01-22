@@ -18,7 +18,8 @@ const userSchema = new Schema(
     createdByHMC: { type: Number, required: true },
     remark: { type: String },
     remarkDate: { type: String },
-    workerID: { type: Number }
+    workerID: { type: Number },
+    reOpenCount: { type: Number, default: 0 }
   },
   { collection: "complaint" }
 );
