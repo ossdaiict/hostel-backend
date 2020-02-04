@@ -18,7 +18,7 @@ var transporter = nodemailer.createTransport({
 
 const sendConfirmationMail = sID => {
   const token = jwt.sign({ sID }, process.env.SECRET_KEY, { expiresIn: "5d" }); // Generate Token
-  const url = `${process.env.URL}/auth/${token}`;
+  const url = `${process.env.URL}/auth/token/${token}`;
 
   const mailOptions = {
     from: '"Hostel DAIICT No Reply" <noreply.hostel.daiict@gmail.com>',

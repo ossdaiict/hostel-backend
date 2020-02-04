@@ -58,6 +58,7 @@ const signIn = (req, res) => {
 };
 
 const HMCVerification = (req, res) => {
+  console.log("helllloooo...");
   const user = jwt.verify(req.params.token, process.env.SECRET_KEY);
   const { sID } = user;
   User.update({ sID }, { isHMCVerified: true }, err => {
@@ -149,12 +150,58 @@ const resetPassword = (req, res) => {
   });
 };
 
+const getAccounts = (req, res) => {
+  User.find({ isSupervisor: false })
+    .select("-__v -_id -password -isHMCVerified -isSupervisor")
+    .then(result => {
+      res.status(201).json(result);
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Database query failed!..." });
+    });
+};
+
+const deleteAccount = (req, res) => {
+  const { sID } = req.params;
+  User.findOneAndRemove({ sID })
+    .then(data => {
+      if (data === null) {
+        return res.status(500).json({ message: "User is not found!..." });
+      }
+      res.status(201).json({ message: "User account is deleted." });
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Database query failed!..." });
+    });
+};
+
+const changeRoleAsConvener = (req, res) => {
+  const { sID } = req.body;
+  User.findOneAndUpdate(
+    { sID },
+    {
+      $set: {
+        isHMCConvener: true
+      }
+    }
+  )
+    .then(result => {
+      res.status(201).json({ message: "Change Role to HMC Convener." });
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Database query failed!..." });
+    });
+};
+
 const router = express.Router();
 
-router.get("/:token", HMCVerification);
 router.post("/signin", signIn);
 router.post("/signup", checkSupervisor, signUp);
 router.post("/reset-password", sendPasswordResetLink);
 router.post("/reset-password/:token", resetPassword);
+router.get("/get-users", checkSupervisor, getAccounts);
+router.delete("/delete-user/:sID", checkSupervisor, deleteAccount);
+router.post("/change-role", checkSupervisor, changeRoleAsConvener);
+router.get("/token/:token", HMCVerification);
 
 module.exports = router;
